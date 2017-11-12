@@ -33,7 +33,7 @@ Basic Usage
 One of the cooler features of ``typet`` is the ability to create complex
 objects with very little code. The following code creates an object that
 generates properties from the annotated class attributes that will ensure that
-only values of *int* or that can coerced into *int* can be set. It also
+only values of *int* or that can be coerced into *int* can be set. It also
 generates a full suite of common comparison methods.
 
 .. code-block:: python
