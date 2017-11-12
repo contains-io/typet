@@ -146,8 +146,8 @@ class _BoundedMeta(Uninstantiable):
                 instance = instantiate(
                     BaseClass, type_, __value, *args, **kwargs)
                 cmp_val = keyfunc(instance)
-                if bound.start or bound.stop:
-                    if bound.start and cmp_val < bound.start:
+                if bound.start is not None or bound.stop is not None:
+                    if bound.start is not None and cmp_val < bound.start:
                         if keyfunc is not identity:
                             raise ValueError(
                                 'The value of {}({}) [{}] is below the minimum'
@@ -157,7 +157,7 @@ class _BoundedMeta(Uninstantiable):
                         raise ValueError(
                             'The value {} is below the minimum allowed value '
                             'of {}.'.format(repr(__value), bound.start))
-                    if bound.stop and cmp_val > bound.stop:
+                    if bound.stop is not None and cmp_val > bound.stop:
                         if keyfunc is not identity:
                             raise ValueError(
                                 'The value of {}({}) [{}] is above the maximum'
@@ -288,9 +288,9 @@ class _BoundedMeta(Uninstantiable):
         Returns:
             A string representing the slice.
         """
-        if bound.start and not bound.stop:
+        if bound.start is not None and bound.stop is None:
             return '{}:'.format(bound.start)
-        if bound.stop and not bound.start:
+        if bound.stop is not None and bound.start is None:
             return ':{}'.format(bound.stop)
         return '{}:{}'.format(bound.start, bound.stop)
 
