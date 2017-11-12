@@ -17,7 +17,7 @@ setup(
     author_email='dangle@contains.io',
     url='https://github.com/contains-io/typet',
     keywords=['typing', 'schema' 'validation', 'types', 'annotation',
-              'pep484'],
+              'PEP 484', 'PEP 526'],
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
     install_requires=[

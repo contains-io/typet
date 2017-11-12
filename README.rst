@@ -132,7 +132,7 @@ bounds and contains an optional attribute.
         hobby: str = None
 
     Person('Jimothy', 23)                    # Okay, hobby will be None
-    Person('Jimothy', 230)                   # Raises ValueError
+    Person('Jimothy', 230)                   # Raises TypeError
     Person('Jimothy', 23, 'Figure Skating')  # Okay, and sets hobby
 
 
