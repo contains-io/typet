@@ -67,7 +67,7 @@ such as to types annotated using the ``typing`` module:
         def __setattr__(self, name, value):
             if name in ('x', 'y'):
                 value = int(value)
-            super().__setattr__(name, value)
+            super(Point, self).__setattr__(name, value)
 
         def __eq__(self, other):
             if other.__class__ is not self.__class__:
@@ -117,6 +117,23 @@ the instance will be of the original type.
     x = BoundedInt(15)  # Okay
     type(x)             # <class 'int'>
     BoundedInt(5)       # Raises ValueError
+
+
+For more advanced example let's combine these to create a class that checks
+bounds and contains an optional attribute.
+
+.. code-block:: python
+
+    from typet import Object, Bounded
+
+    class Person(Object):
+        name: str
+        age: Bounded[int, 0:150]
+        hobby: str = None
+
+    Person('Jimothy', 23)                    # Okay, hobby will be None
+    Person('Jimothy', 230)                   # Raises ValueError
+    Person('Jimothy', 23, 'Figure Skating')  # Okay, and sets hobby
 
 
 Future Usage for Python 2.7 to 3.5
