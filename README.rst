@@ -57,12 +57,12 @@ such as to types annotated using the ``typing`` module:
 
     class Point:
 
-        def __init__(self, x: int, y: int):
+        def __init__(self, x, y):
             self.x = x
             self.y = y
 
         def __repr__(self):
-            return f'Point(x={self.x}, y={self.y})'
+            return 'Point(x={x}, y={y})'.format(x=self.x, y=self.y)
 
         def __setattr__(self, name, value):
             if name in ('x', 'y'):
