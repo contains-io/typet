@@ -20,14 +20,12 @@ setup(
               'PEP 483', 'PEP 484', 'PEP 526'],
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
-    install_requires=[
-        'typingplus >= 2, < 3',
-    ],
+    install_requires=['typingplus >= 2, < 3'],
     setup_requires=[
         'pytest-runner',
         'setuptools_scm',
     ],
-    tests_require=['pytest >= 3.0'],
+    tests_require=['pytest >= 3.2'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'License :: OSI Approved :: MIT License',
