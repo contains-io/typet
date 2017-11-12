@@ -64,10 +64,10 @@ the instance will be of the original type.
     BoundedInt(5)       # Raises ValueError
 
 
-.. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=development
+.. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=master
    :target: https://travis-ci.org/contains-io/typet
-.. |Coverage Status| image:: https://coveralls.io/repos/github/contains-io/typet/badge.svg?branch=development
-   :target: https://coveralls.io/github/contains-io/typet?branch=development
+.. |Coverage Status| image:: https://coveralls.io/repos/github/contains-io/typet/badge.svg?branch=master
+   :target: https://coveralls.io/github/contains-io/typet?branch=master
 .. |PyPI| image:: https://img.shields.io/pypi/v/typet.svg
    :target: https://pypi.python.org/pypi/typet/
 .. |Python Versions| image:: https://img.shields.io/pypi/pyversions/typet.svg
