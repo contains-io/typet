@@ -119,6 +119,29 @@ the instance will be of the original type.
     BoundedInt(5)       # Raises ValueError
 
 
+Future Usage for Python 2.7 to 3.5
+----------------------------------
+
+In the future, ``typet`` will support class type comments for annotations.
+
+.. code-block:: python
+
+    from typet import Object
+
+    class Point(Object):
+        x = None  # type: int
+        y = None  # type: int
+
+    p1 = Point(0, 0)      # Point(x=0, y=0)
+    p2 = Point('2', 2.5)  # Point(x=2, y=2)
+    assert p1 < p2        # True
+
+Note that, because Python prior to 3.6 cannot annotate an attribute without
+defining it, by convention, this will not imply a type of `Optional[int]`. If
+the type is `Optional[int]`, it must be specified explicitly in the type
+comment.
+
+
 .. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=master
    :target: https://travis-ci.org/contains-io/typet
 .. |Coverage Status| image:: https://coveralls.io/repos/github/contains-io/typet/badge.svg?branch=master
