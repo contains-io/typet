@@ -62,7 +62,7 @@ such as to types annotated using the ``typing`` module:
             self.y = y
 
         def __repr__(self):
-            return f'Point(x={self.x}, y={self.y})''
+            return f'Point(x={self.x}, y={self.y})'
 
         def __setattr__(self, name, value):
             if name in ('x', 'y'):
