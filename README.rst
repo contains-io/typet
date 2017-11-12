@@ -6,8 +6,8 @@ typet
 *Types that make validating types in Python easy.*
 
 typet works best with Python 3.6 or later. Prior to 3.6, validation types are
-supported, but the object types cannot be supported until ``typingplus``
-supports class type comments.
+supported, but the object types cannot be supported until typingplus_ supports
+class type comments.
 
 
 Installation
@@ -141,6 +141,7 @@ defining it, by convention, this will not imply a type of `Optional[int]`. If
 the type is `Optional[int]`, it must be specified explicitly in the type
 comment.
 
+.. _typingplus: https://github.com/contains-io/typingplus/issues/1
 
 .. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=master
    :target: https://travis-ci.org/contains-io/typet
