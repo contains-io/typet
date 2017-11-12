@@ -72,5 +72,5 @@ the instance will be of the original type.
    :target: https://pypi.python.org/pypi/typet/
 .. |Python Versions| image:: https://img.shields.io/pypi/pyversions/typet.svg
    :target: https://pypi.python.org/pypi/typet/
-.. |Code Quality| image:: https://api.codacy.com/project/badge/Grade/ccf7fb925d32499f80a1cfb8a640436b
+.. |Code Quality| .. image:: https://api.codacy.com/project/badge/Grade/dae19ee1767b492e8bdf5edb16409f65
    :target: https://www.codacy.com/app/contains-io/typet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=contains-io/typet&amp;utm_campaign=Badge_Grade
