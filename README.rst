@@ -48,6 +48,58 @@ generates a full suite of common comparison methods.
     p2 = Point('2', 2.5)  # Point(x=2, y=2)
     assert p1 < p2        # True
 
+
+A close equivalent traditional class would be much larger, would have to be
+updated for any new attributes, and wouldn't support more advanced casting,
+such as to types annotated using the ``typing`` module:
+
+.. code-block:: python
+
+    class Point:
+
+        def __init__(self, x: int, y: int):
+            self.x = x
+            self.y = y
+
+        def __setattr__(self, name, value):
+            if name in ('x', 'y'):
+                value = int(value)
+            super().__setattr__(name, value)
+
+        def __eq__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return (self.x, self.y) == (other.x, other.y)
+
+        def __ne__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return not self == other
+
+        def __lt__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return (self.x, self.y) < (other.x, other.y)
+
+        def __le__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return self == other or self < other
+
+        def __gt__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return not self <= other
+
+        def __ge__(self, other):
+            if other.__class__ is not self.__class__:
+                return NotImplemented
+            return not self < other
+
+        def __hash__(self):
+            return hash((self.x, self.y))
+
+
 Additionally, ``typet`` contains a suite of sliceable classes that will create
 bounded, or validated, versions of those types that always assert their values
 are within bounds; however, when an instance of a bounded type is instantiated,
