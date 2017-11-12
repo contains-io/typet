@@ -5,7 +5,7 @@ typet
 
 *Types that make validating types in Python easy.*
 
-typet works best with Python 3.6 or later. Prior to 3.6, validation types are
+``typet`` works best with Python 3.6 or later. Prior to 3.6, validation types are
 supported, but the object types cannot be supported until typingplus_ supports
 class type comments.
 
@@ -55,7 +55,7 @@ such as to types annotated using the ``typing`` module:
 
 .. code-block:: python
 
-    class Point:
+    class Point(object):
 
         def __init__(self, x, y):
             self.x = x
