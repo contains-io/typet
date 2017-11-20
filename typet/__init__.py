@@ -639,7 +639,8 @@ def _create_typed_object_meta(get_fset):
                           names, attrs, annotations, attr)]
             typed_attrs['_tp__typed_properties'] = properties
             typed_attrs['_tp__undefined_typed_properties'] = [
-                attr for attr in properties if attr not in attrs]
+                attr for attr in properties if attr not in attrs or
+                attrs[attr] is None and use_comment_type_hints]
             return super(_AnnotatedObjectMeta, cls).__new__(
                 cls, name, bases, typed_attrs)
 
