@@ -30,6 +30,15 @@ def test_object():
     assert x.x == '5'
 
 
+def test_object_comments():
+    """Simple test to verify basic Object functionality with comment hints."""
+    class X(typet.Object):
+        x = None  # type: str
+    x = X(5)
+    assert isinstance(x.x, str)
+    assert x.x == '5'
+
+
 def test_object_failure():
     """Simple test to verify basic Object failure functionality."""
     class X(typet.Object):

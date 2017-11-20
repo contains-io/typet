@@ -91,7 +91,7 @@ def test_path_types(request):
         def _reset_home():
             os.environ['HOME'] = home
 
-        request.add_finalizer(_reset_home)
+        request.addfinalizer(_reset_home)
     except KeyError:
         pass
     os.environ['HOME'] = '/home/bob'

@@ -5,9 +5,8 @@ typet
 
 *Types that make validating types in Python easy.*
 
-``typet`` works best with Python 3.6 or later. Prior to 3.6, validation types are
-supported, but the object types cannot be supported until typingplus_ supports
-class type comments.
+``typet`` works best with Python 3.6 or later. Prior to 3.6, object types must
+use comment type hint syntax.
 
 
 Installation
@@ -136,10 +135,10 @@ bounds and contains an optional attribute.
     Person('Jimothy', 23, 'Figure Skating')  # Okay, and sets hobby
 
 
-Future Usage for Python 2.7 to 3.5
-----------------------------------
+Python 2.7 to 3.5
+-----------------
 
-In the future, ``typet`` will support class type comments for annotations.
+``typet`` supports class type comments for annotations.
 
 .. code-block:: python
 

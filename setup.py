@@ -20,7 +20,7 @@ setup(
               'PEP 483', 'PEP 484', 'PEP 526'],
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
-    install_requires=['typingplus >= 2, < 3'],
+    install_requires=['typingplus >= 2.1, < 3'],
     setup_requires=[
         'pytest-runner',
         'setuptools_scm',

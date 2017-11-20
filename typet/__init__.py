@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pragma pylint: disable=bad-mcs-classmethod-argument
+# pragma pylint: disable=bad-mcs-classmethod-argument,too-many-lines
 """A module for handling with typing and type hints.
 
 Classes:
@@ -29,13 +29,17 @@ Classes:
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import inspect
 import os.path
+import re
+import tokenize
 import types
 
 import six
 from typingplus import (  # noqa: F401 pylint: disable=unused-import
     _ForwardRef,
     cast,
+    get_type_hints,
     is_instance,
     Any,
     Callable,
@@ -490,6 +494,63 @@ def _get_type_name(type_):
     return name.rsplit('.', 1)[-1] or str(type_)
 
 
+def _get_class_frame_source(class_name):
+    # type: (str) -> Optional[str]
+    """Return the source code for a class by checking the frame stack.
+
+    This is necessary because it is not possible to get the source of a class
+    being created by a metaclass directly.
+
+    Args:
+        class_name: The class to look for on the stack.
+
+    Returns:
+        The source code for the requested class if the class was found and the
+        source was accessible.
+    """
+    for frame_info in inspect.stack():
+        with open(frame_info.filename) as fp:
+            src = ''.join(
+                fp.readlines()[frame_info.lineno - 1:])
+        if re.search(r'class\s+{}'.format(class_name), src):
+            reader = six.StringIO(src).readline
+            tokens = tokenize.generate_tokens(reader)
+            source_tokens = []
+            indent_level = 0
+            base_indent_level = 0
+            has_base_level = False
+            for token, value, _, _, _ in tokens:
+                source_tokens.append((token, value))
+                if token == tokenize.INDENT:
+                    indent_level += 1
+                elif token == tokenize.DEDENT:
+                    indent_level -= 1
+                    if has_base_level and indent_level <= base_indent_level:
+                        return tokenize.untokenize(source_tokens)
+                elif not has_base_level:
+                    has_base_level = True
+                    base_indent_level = indent_level
+
+
+def _is_propertyable(names, attrs, annotations, attr):
+    """Determine if an attribute can be replaced with a property.
+
+    Args:
+        names: The complete list of all attribute names for the class.
+        attrs: The attribute dict returned by __prepare__.
+        annotations: A mapping of all defined annotations for the class.
+        attr: The attribute to test.
+
+    Returns:
+        True if the attribute can be replaced with a property; else False.
+    """
+    return (attr in annotations and
+            not attr.startswith('_') and
+            not attr.isupper() and
+            '__{}'.format(attr) not in names and
+            not isinstance(getattr(attrs, attr, None), types.MethodType))
+
+
 def _create_typed_object_meta(get_fset):
     """Create a metaclass for typed objects.
 
@@ -505,24 +566,6 @@ def _create_typed_object_meta(get_fset):
         that will guarantee the type of the stored value matches the
         annotation.
     """
-    def _is_propertyable(names, attrs, annotations, attr):
-        """Determine if an attribute can be replaced with a property.
-
-        Args:
-            names: The complete list of all attribute names for the class.
-            attrs: The attribute dict returned by __prepare__.
-            annotations: A mapping of all defined annotations for the class.
-            attr: The attribute to test.
-
-        Returns:
-            True if the attribute can be replaced with a property; else False.
-        """
-        return (attr in annotations and
-                not attr.startswith('_') and
-                not attr.isupper() and
-                '__{}'.format(attr) not in names and
-                not isinstance(getattr(attrs, attr, None), types.MethodType))
-
     def _get_fget(attr, private_attr, type_):
         """Create a property getter method for an attribute.
 
@@ -568,6 +611,11 @@ def _create_typed_object_meta(get_fset):
                 validate against the annotated type.
             """
             annotations = attrs.get('__annotations__', {})
+            use_comment_type_hints = (
+                not annotations and attrs.get('__module__') != __name__)
+            if use_comment_type_hints:
+                source = _get_class_frame_source(name)
+                annotations = get_type_hints(source)
             names = list(attrs) + list(annotations)
             typed_attrs = {}
             for attr in names:
@@ -577,8 +625,12 @@ def _create_typed_object_meta(get_fset):
                     if attr in attrs:
                         typed_attrs[private_attr] = attrs[attr]
                     type_ = (
-                        Optional[annotations[attr]] if attr in attrs and
-                        attrs[attr] is None else annotations[attr])
+                        Optional[annotations[attr]] if
+                        not use_comment_type_hints and
+                        attr in attrs and
+                        attrs[attr] is None
+                        else annotations[attr]
+                    )
                     typed_attrs[attr] = property(
                         _get_fget(attr, private_attr, type_),
                         get_fset(attr, private_attr, type_)
