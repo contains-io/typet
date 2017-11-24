@@ -1,0 +1,10 @@
+[MASTER]
+disable=invalid-metaclass,unsupported-membership-test,no-value-for-parameter,protected-access,function-redefined,too-few-public-methods,invalid-sequence-index,bad-continuation,import-error,invalid-name,no-member,locally-disabled,locally-enabled,redefined-outer-name,redefined-variable-type
+reports=no
+known-standard-library=typing
+
+[SIMILARITIES]
+min-similarity-lines=10
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes

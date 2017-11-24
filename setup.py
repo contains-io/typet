@@ -20,7 +20,10 @@ setup(
               'PEP 483', 'PEP 484', 'PEP 526'],
     license='MIT',
     packages=find_packages(exclude=['tests', 'docs']),
-    install_requires=['typingplus >= 2.1, < 3'],
+    install_requires=[
+        'pathlib2',
+        'typingplus >= 2.1.1, < 3'
+    ],
     setup_requires=[
         'pytest-runner',
         'setuptools_scm',
@@ -34,7 +37,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
