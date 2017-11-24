@@ -4,7 +4,6 @@
 from __future__ import unicode_literals
 
 import os.path
-import types
 import uuid
 
 import pytest
@@ -34,7 +33,7 @@ def test_bounded_type():
     assert BoundedStr('abc') == 'abc'
     with pytest.raises(ValueError):
         BoundedStr('abcdef')
-    assert str(BoundedInt) == 'typet.Bounded[int, 10:20]'
+    assert str(BoundedInt) == 'typet.validation.Bounded[int, 10:20]'
     assert typet.Bounded[Any, 10:20](15) == 15
     assert typet.Bounded['int', 20](15) == 15
     assert typet.Bounded['int', 10:](15) == 15
@@ -59,7 +58,7 @@ def test_length_type():
     assert LengthBoundedList([1]) == [1]
     with pytest.raises(ValueError):
         LengthBoundedList([1, 2])
-    assert str(LengthBoundedStr) == 'typet.Length[str, 1:5]'
+    assert str(LengthBoundedStr) == 'typet.validation.Length[str, 1:5]'
     assert typet.Length[Any, 1:5]('abc') == 'abc'
     assert typet.Length['str', 20]('abc') == 'abc'
 

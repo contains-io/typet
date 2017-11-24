@@ -92,3 +92,10 @@ ENV/
 .sublimelinterrc
 *.sublime-project
 *.sublime-workspace
+
+# VS Code project settings
+*.code-workspace
+.vscode
+
+# mypy
+.mypy_cache
