@@ -71,30 +71,20 @@ def test_validation_type():
         typet.Valid[int, int, int]
 
 
-def test_path_types(request):
+def test_path_types():
     """Test that the supplied path validation paths work."""
-    assert typet.File(__file__) == __file__
+    assert str(typet.File(__file__))== __file__
     with pytest.raises(ValueError):
         typet.File(str(uuid.uuid4()))
-    assert typet.Dir(os.path.dirname(__file__)) == os.path.dirname(__file__)
-    with pytest.raises(ValueError):
-        typet.Dir(str(uuid.uuid4()))
-    assert typet.ExistingPath(__file__) == __file__
-    assert typet.ExistingPath(os.path.dirname(__file__)) == os.path.dirname(
+    assert str(typet.Dir(os.path.dirname(__file__))) == os.path.dirname(
         __file__)
     with pytest.raises(ValueError):
+        typet.Dir(str(uuid.uuid4()))
+    assert str(typet.ExistingPath(__file__)) == __file__
+    assert str(typet.ExistingPath(
+        os.path.dirname(__file__))) == os.path.dirname(__file__)
+    with pytest.raises(ValueError):
         typet.ExistingPath(str(uuid.uuid4()))
-    try:
-        home = os.environ['HOME']
-
-        def _reset_home():
-            os.environ['HOME'] = home
-
-        request.addfinalizer(_reset_home)
-    except KeyError:
-        pass
-    os.environ['HOME'] = '/home/bob'
-    assert typet.Path('~/test') == '/home/bob/test'
 
 
 def test_none_type():
