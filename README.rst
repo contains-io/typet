@@ -125,9 +125,11 @@ bounds and contains an optional attribute.
 
     from typet import Object, Bounded
 
+    Age = Bounded[int, 0:150]
+
     class Person(Object):
         name: str
-        age: Bounded[int, 0:150]
+        age: Age
         hobby: str = None
 
     Person('Jimothy', 23)                    # Okay, hobby will be None
