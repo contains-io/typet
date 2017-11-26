@@ -34,7 +34,7 @@ from typingplus import (  # noqa: F401 pylint: disable=unused-import
     TypeVar,
 )
 
-from .types import NoneType
+from .types import NoneType  # pylint: disable=redefined-builtin
 
 
 __all__ = (

@@ -21,4 +21,4 @@ __all__ = (
 
 
 DefType = typing.Union[types.FunctionType, types.MethodType]
-NoneType = type(None)
+NoneType = type(None)  # pylint: disable=redefined-builtin

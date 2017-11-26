@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pragma pylint: disable=wildcard-import
+# pragma pylint: disable=wildcard-import,redefined-builtin
 """Contains all typet classes and functions."""
 
 from __future__ import unicode_literals
