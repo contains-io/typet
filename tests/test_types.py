@@ -109,3 +109,12 @@ def test_uninstantiable():
 
     with pytest.raises(TypeError):
         TestClass()
+
+
+def test_isinstance():
+    """Test that instances of sliced type are instances of validation type."""
+    Age = typet.Bounded[int, 0:150]
+    assert isinstance(25, Age) is True
+    assert isinstance(-5, Age) is False
+    assert isinstance(200, Age) is False
+    assert isinstance('not an int', Age) is False
