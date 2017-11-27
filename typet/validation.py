@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pragma pylint: disable=bad-mcs-method-argument,bad-mcs-classmethod-argument
 """A module for handling with typing and type hints.
 
 Classes:
@@ -32,8 +33,8 @@ from .meta import Uninstantiable
 _T = TypeVar('_T')
 
 
-class _ClsReprMeta(type):
-    """A metaclass that returns a custom type repr if defined."""
+class _ValidationMeta(type):
+    """A metaclass that returns handles custom type checks."""
 
     __class_repr__ = None  # type: Optional[str]
 
@@ -42,7 +43,15 @@ class _ClsReprMeta(type):
         """Return a custom string for the type repr if defined."""
         if cls.__class_repr__:
             return cls.__class_repr__
-        return super(_ClsReprMeta, cls).__repr__()
+        return super(_ValidationMeta, cls).__repr__()
+
+    def __instancecheck__(cls, other):
+        # type: (Any) -> bool
+        try:
+            cls(other)
+            return True
+        except ValueError:
+            return False
 
 
 class _BoundedMeta(Uninstantiable):
@@ -71,7 +80,7 @@ class _BoundedMeta(Uninstantiable):
         class _BoundedSubclass(BaseClass):  # type: ignore
             """A subclass of type_ or object, bounded by a slice."""
 
-            def __new__(mcs, __value, *args, **kwargs):
+            def __new__(cls, __value, *args, **kwargs):
                 # type: (Type[_BoundedSubclass], Any, *Any, **Any) -> type
                 """Return __value cast to _T.
 
@@ -135,8 +144,8 @@ class _BoundedMeta(Uninstantiable):
         except TypeError:
             BaseClass = object
 
-        class MetaClass(_ClsReprMeta, BaseClass.__class__):  # type: ignore
-            """Use the type_ metaclass and include class repr functionality."""
+        class MetaClass(_ValidationMeta, BaseClass.__class__):  # type: ignore
+            """Use the type_ meta and include base validation functionality."""
 
         return BaseClass, MetaClass
 
