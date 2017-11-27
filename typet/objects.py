@@ -317,8 +317,8 @@ class _BaseAnnotatedObject(object):
     def __init__(self, *args, **kwargs):
         """Set all attributes according to their annotation status."""
         super(_BaseAnnotatedObject, self).__init__()
-        properties = self.__class__._tp__typed_properties
-        required = self.__class__._tp__undefined_typed_properties
+        properties = self._tp__typed_properties
+        required = self._tp__undefined_typed_properties
         positionals = zip(properties, args)
         for attr, value in positionals:
             if attr in kwargs:
@@ -351,7 +351,7 @@ class _BaseAnnotatedObject(object):
             ', '.join(
                 '{}={}'.format(attr_name, repr(getattr(self, attr_name)))
                 for attr_name in
-                self.__class__._tp__typed_properties))  # type: ignore
+                self._tp__typed_properties))  # type: ignore
 
 
 class _AnnotatedObjectComparisonMixin(object):
@@ -366,7 +366,7 @@ class _AnnotatedObjectComparisonMixin(object):
         """
         try:
             return tuple(getattr(self, p) for p in
-                         self.__class__._tp__typed_properties)
+                         self._tp__typed_properties)
         except AttributeError:
             raise NotImplementedError
 
