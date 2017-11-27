@@ -47,9 +47,17 @@ class _ValidationMeta(type):
 
     def __instancecheck__(cls, other):
         # type: (Any) -> bool
+        """Determine if an instance is of the sliced type and within bounds.
+
+        Args:
+            other: The instance to test.
+
+        Returns:
+            True if the object is both of the same type as sliced by the
+            created class as well as within the bounds defined by the class.
+        """
         try:
-            cls(other)
-            return True
+            return bool(isinstance(other, cls.__type__) and cls(other))
         except ValueError:
             return False
 
@@ -122,6 +130,7 @@ class _BoundedMeta(Uninstantiable):
                         '{}({}) is False'.format(keyfunc_name, repr(instance)))
                 return instance
 
+        _BoundedSubclass.__type__ = type_
         _BoundedSubclass.__class_repr__ = cls._get_class_repr(
             type_, bound, keyfunc, keyfunc_name)
         return _BoundedSubclass
