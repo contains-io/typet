@@ -59,8 +59,10 @@ def _get_type_name(type_):
         A string value describing the class name that can be used in a natural
         language sentence.
     """
-    name = getattr(type_, '__qualname__', getattr(type_, '__name__', ''))
-    return name.rsplit('.', 1)[-1] or str(type_)
+    name = repr(type_)
+    if name.startswith('<'):
+        name = getattr(type_, '__qualname__', getattr(type_, '__name__', ''))
+    return name.rsplit('.', 1)[-1] or repr(type_)
 
 
 def _get_class_frame_source(class_name):
