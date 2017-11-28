@@ -80,9 +80,9 @@ def _get_class_frame_source(class_name):
         source was accessible.
     """
     for frame_info in inspect.stack():
-        with open(frame_info.filename) as fp:
+        with open(frame_info[1]) as fp:
             src = ''.join(
-                fp.readlines()[frame_info.lineno - 1:])
+                fp.readlines()[frame_info[2] - 1:])
         if re.search(r'class\s+{}'.format(class_name), src):
             reader = six.StringIO(src).readline
             tokens = tokenize.generate_tokens(reader)
@@ -97,7 +97,11 @@ def _get_class_frame_source(class_name):
                 elif token == tokenize.DEDENT:
                     indent_level -= 1
                     if has_base_level and indent_level <= base_indent_level:
-                        return tokenize.untokenize(source_tokens)
+                        return (
+                            tokenize.untokenize(source_tokens),
+                            frame_info[0].f_globals,
+                            frame_info[0].f_locals
+                        )
                 elif not has_base_level:
                     has_base_level = True
                     base_indent_level = indent_level
@@ -198,8 +202,8 @@ def _create_typed_object_meta(get_fset):
             use_comment_type_hints = (
                 not annotations and attrs.get('__module__') != __name__)
             if use_comment_type_hints:
-                source = _get_class_frame_source(name)
-                annotations = get_type_hints(source)
+                source, globalns, localns = _get_class_frame_source(name)
+                annotations = get_type_hints(source, globalns, localns)
             names = list(attrs) + list(annotations)
             typed_attrs = {}
             for attr in names:
@@ -225,7 +229,7 @@ def _create_typed_object_meta(get_fset):
             typed_attrs['_tp__undefined_typed_properties'] = [
                 attr for attr in properties if attr not in attrs or
                 attrs[attr] is None and use_comment_type_hints and
-                NoneType in getattr(annotations[attr], '__args__', ())
+                NoneType not in getattr(annotations[attr], '__args__', ())
             ]
             return super(_AnnotatedObjectMeta, mcs).__new__(
                 mcs, name, bases, typed_attrs)
