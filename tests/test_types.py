@@ -9,7 +9,12 @@ import uuid
 import pytest
 import six
 
-from typingplus import Any
+from typingplus import (
+    is_instance,
+    Any,
+    AnyStr,
+    Optional,
+)
 import typet
 
 
@@ -118,3 +123,46 @@ def test_isinstance():
     assert isinstance(-5, Age) is False
     assert isinstance(200, Age) is False
     assert isinstance('not an int', Age) is False
+
+
+def test_strict_object():
+    """Simple test to verify basic StrictObject functionality."""
+    class X(typet.StrictObject):
+        x = None  # type: AnyStr
+    x = X('initial')
+    x.x = 'hello'
+    assert is_instance(x.x, AnyStr)
+    assert x.x == 'hello'
+    with pytest.raises(TypeError):
+        x.x = 5
+
+
+def test_object():
+    """Simple test to verify basic Object functionality."""
+    class X(typet.Object):
+        x = None  # type: Optional[AnyStr]
+    x = X()
+    x.x = 5
+    assert is_instance(x.x, AnyStr)
+    assert x.x == '5'
+
+
+def test_object_comments():
+    """Simple test to verify basic Object functionality with comment hints."""
+    class X(typet.Object):
+        x = None  # type: AnyStr
+    with pytest.raises(TypeError):
+        X()
+    x = X(5)
+    assert is_instance(x.x, AnyStr)
+    assert x.x == '5'
+
+
+def test_object_failure():
+    """Simple test to verify basic Object failure functionality."""
+    class X(typet.Object):
+        x = None  # type: Optional[int]
+    x = X()
+    x.x = None
+    with pytest.raises(TypeError):
+        x.x = 'not an integer'
