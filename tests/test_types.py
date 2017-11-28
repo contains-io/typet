@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 """Tests for annotation type hint casting."""
 
-from __future__ import unicode_literals
-
 import os.path
 import uuid
 
 import pytest
 import six
 
-from typingplus import (
+from typingplus import (  # noqa: F401 pylint: disable=unused-import
     is_instance,
     Any,
-    AnyStr,
     Optional,
 )
 import typet
@@ -128,10 +125,10 @@ def test_isinstance():
 def test_strict_object():
     """Simple test to verify basic StrictObject functionality."""
     class X(typet.StrictObject):
-        x = None  # type: AnyStr
+        x = None  # type: str
     x = X('initial')
     x.x = 'hello'
-    assert is_instance(x.x, AnyStr)
+    assert is_instance(x.x, str)
     assert x.x == 'hello'
     with pytest.raises(TypeError):
         x.x = 5
@@ -140,21 +137,21 @@ def test_strict_object():
 def test_object():
     """Simple test to verify basic Object functionality."""
     class X(typet.Object):
-        x = None  # type: Optional[AnyStr]
+        x = None  # type: Optional[str]
     x = X()
     x.x = 5
-    assert is_instance(x.x, AnyStr)
+    assert is_instance(x.x, str)
     assert x.x == '5'
 
 
 def test_object_comments():
     """Simple test to verify basic Object functionality with comment hints."""
     class X(typet.Object):
-        x = None  # type: AnyStr
+        x = None  # type: str
     with pytest.raises(TypeError):
         X()
     x = X(5)
-    assert is_instance(x.x, AnyStr)
+    assert is_instance(x.x, str)
     assert x.x == '5'
 
 
