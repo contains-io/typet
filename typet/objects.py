@@ -80,10 +80,13 @@ def _get_class_frame_source(class_name):
         source was accessible.
     """
     for frame_info in inspect.stack():
-        with open(frame_info[1]) as fp:
-            src = ''.join(
-                fp.readlines()[frame_info[2] - 1:])
-        if re.search(r'class\s+{}'.format(class_name), src):
+        try:
+            with open(frame_info[1]) as fp:
+                src = ''.join(
+                    fp.readlines()[frame_info[2] - 1:])
+        except IOError:
+            continue
+        if re.search(r'\bclass\b\s+\b{}\b'.format(class_name), src):
             reader = six.StringIO(src).readline
             tokens = tokenize.generate_tokens(reader)
             source_tokens = []
@@ -105,6 +108,8 @@ def _get_class_frame_source(class_name):
                 elif not has_base_level:
                     has_base_level = True
                     base_indent_level = indent_level
+    raise TypeError(
+        'Unable to retrieve source for class "{}"'.format(class_name))
 
 
 def _is_propertyable(names,  # type: List[str]
