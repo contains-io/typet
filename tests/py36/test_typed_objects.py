@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import pytest
 
+import typingplus as typing
 import typet
 
 
@@ -38,3 +39,10 @@ def test_object_failure():
     x.x = None
     with pytest.raises(TypeError):
         x.x = 'not an integer'
+
+
+def test_optional_unassigned():
+    """Verify that an unassigned Optional attribute is optional in __init__."""
+    class X(typet.Object):
+        x: typing.Optional[int]
+    X()
