@@ -413,8 +413,21 @@ class _StringMeta(_LengthBoundedMeta):
     """A metaclass that binds a string to a length bound."""
 
     def __call__(cls, *args, **kwargs):
-        """Instantiate a _STR_TYPE object."""
+        """Instantiate a string object."""
         return _STR_TYPE(*args, **kwargs)
+
+    def __instancecheck__(self, other):
+        # type: (Any) -> bool
+        """Determine if an instance is of the string type.
+
+        Args:
+            other: The instance to test.
+
+        Returns:
+            True if the object is both of the same type as the String;
+            otherwise, False,
+        """
+        return isinstance(other, _STR_TYPE)
 
     def _get_args(cls, args):
         # type: (tuple) -> Tuple[type, slice, Callable]
