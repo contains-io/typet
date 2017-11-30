@@ -22,8 +22,11 @@ Install it using pip:
 Features
 --------
 
-- Validation types that can be used while casting to validate an object's
-  content.
+- An Object base class that eliminates boilerplate code and verifies and
+  coerces types when possible.
+- Validation types that, when instantiated, create an instance of a specific
+  type and verify that they are within the user defined boundaries for the
+  type.
 
 
 Basic Usage
@@ -135,8 +138,9 @@ the instance will be of the original type.
     BoundedInt(5)       # Raises ValueError
 
 
-For more advanced example let's combine these to create a class that checks
-bounds and contains an optional attribute.
+To showcase the power of these classes, they can be combined these to create a
+class that checks bounds, contains an optional attribute and defines common
+methods automatically.
 
 .. code-block:: python
 
@@ -154,7 +158,6 @@ bounds and contains an optional attribute.
 
 
 This class can be used intuitively:
-
 
 .. code-block:: python
 
