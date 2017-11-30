@@ -65,6 +65,21 @@ def test_length_type():
     assert typet.Length['str', 20]('abc') == 'abc'
 
 
+def test_string_type():
+    """Test the bounded string type object."""
+    with pytest.raises(TypeError):
+        BoundedStr = typet.String[10:20, lambda x: x]
+    BoundedStr = typet.String[1:5]
+    with pytest.raises(ValueError):
+        BoundedStr('')
+    assert BoundedStr('a') == 'a'
+    assert BoundedStr('abcde') == 'abcde'
+    with pytest.raises(ValueError):
+        BoundedStr('abcdef')
+    assert str(BoundedStr) == 'typet.validation.String[1:5]'
+    assert typet.String('hello') == 'hello'
+
+
 def test_validation_type():
     """Test that the validation type validates content."""
     ValidFile = typet.Valid[os.path.isfile]

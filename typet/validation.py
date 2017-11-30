@@ -33,7 +33,7 @@ from .meta import Uninstantiable
 _T = TypeVar('_T')
 
 if six.PY3:
-    unicode = str
+    unicode = str  # pylint: disable=redefined-builtin
 _STR_TYPE = unicode
 
 
@@ -405,4 +405,72 @@ class Valid(object):
 
     Valid can be sliced with one or two parameters: an optional type to cast
     the given value to, and a validation method.
+    """
+
+
+class _StringMeta(_LengthBoundedMeta):
+    """A metaclass that binds a string to a length bound."""
+
+    def __call__(cls, *args, **kwargs):
+        """Instantiate a _STR_TYPE object."""
+        return _STR_TYPE(*args, **kwargs)
+
+    def _get_args(cls, args):
+        # type: (tuple) -> Tuple[type, slice, Callable]
+        """Return the parameters necessary to check type boundaries.
+
+        Args:
+            args: A slice representing the minimum and maximum lengths allowed
+                for values of that string.
+
+        Returns:
+            A tuple with three parameters: a type, a slice, and the len
+            function.
+        """
+        if isinstance(args, tuple):
+            raise TypeError(
+                '{}[...] takes exactly one argument.'.format(cls.__name__))
+        return super(_StringMeta, cls)._get_args((_STR_TYPE, args))
+
+    def _get_class_repr(cls, type_, bound, keyfunc, keyfunc_name):
+        # type: (Any, slice, Callable, str) -> str
+        """Return a class representation using the slice parameters.
+
+        Args:
+            type_: The type the class was sliced with. This will always be
+                _STR_TYPE.
+            bound: The boundaries specified for the values of type_.
+            keyfunc: The comparison function used to check the value
+                boundaries. This will always be builtins.len().
+            keyfunc_name: The name of keyfunc. This will always be 'len'.
+
+        Returns:
+            A string representing the class.
+        """
+        return '{}.{}[{}]'.format(
+            cls.__module__, cls.__name__, cls._get_bound_repr(bound))
+
+
+@six.add_metaclass(_StringMeta)
+class String(object):
+    """A type that creates a length bounded version of a string when sliced.
+
+    String represents a specific string type. On Python 2, this is 'unicode'
+    and on Python 3 this is 'str'.
+
+    String can be sliced with one parameter: a slice representing the minimum
+    and maximum lengths allowed for values of the string.
+
+    If String is not sliced, it will act as a constructor for the string type.
+
+    >>> String[5:10]('abcde')
+    'abcde'
+    >>> String[5:10]('abc')
+    Traceback (most recent call last):
+        ...
+    ValueError: The value of len('abc') [3] is below the minimum ...
+    >>> String[5:10]('abcdefghijk')
+    Traceback (most recent call last):
+        ...
+    ValueError: The value of len('abcdefghijk') [11] is above the maximum ...
     """
