@@ -231,9 +231,10 @@ def _create_typed_object_meta(get_fset):
             properties = [attr for attr in annotations if _is_propertyable(
                           names, attrs, annotations, attr)]
             typed_attrs['_tp__typed_properties'] = properties
-            typed_attrs['_tp__undefined_typed_properties'] = [
-                attr for attr in properties if attr not in attrs or
-                attrs[attr] is None and use_comment_type_hints and
+            typed_attrs['_tp__required_typed_properties'] = [
+                attr for attr in properties if (
+                    attr not in attrs or
+                    attrs[attr] is None and use_comment_type_hints) and
                 NoneType not in getattr(annotations[attr], '__args__', ())
             ]
             return super(_AnnotatedObjectMeta, mcs).__new__(
@@ -327,7 +328,7 @@ class _BaseAnnotatedObject(object):
         """Set all attributes according to their annotation status."""
         super(_BaseAnnotatedObject, self).__init__()
         properties = self._tp__typed_properties
-        required = self._tp__undefined_typed_properties
+        required = self._tp__required_typed_properties
         positionals = zip(properties, args)
         for attr, value in positionals:
             if attr in kwargs:
