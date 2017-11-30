@@ -148,22 +148,26 @@ bounds and contains an optional attribute.
 
     class Person(Object):
         name: Name
+        surname: Name
         age: Age
         hobby: Hobby = None
 
 
-This class can be used in an intuitive way:
+This class can be used intuitively:
 
 
 .. code-block:: python
 
-    Person('Jimothy', 23)                    # Okay; hobby will be None
-    Person('Jimothy', 230)                   # Raises TypeError
-    Person('Jimothy', 23, 'Figure Skating')  # Okay; and sets hobby
-    Person(name='Jimothy', age=23)           # Keyword arguments are okay.
-    Person('Jimothy',                        # As-is mixing and matching
-           hobby='Figure Skating',           # positional and keyword
-           age=23)                           # arguments.
+    Person('Jim', 'Coder', 23)            # Okay; hobby will be None
+    Person('Jim', 'Coder', 230)           # Raises TypeError
+    Person('Jim', 'Coder', 23, 'Python')  # Okay; sets hobby
+    Person(name='Jim',                    # Keyword arguments are okay.
+           surname='Coder',
+           age=23)
+    Person('Jim',                         # As is mixing and matching
+           'Coder',                       # positional and keyword arguments.
+           hobby='Python',
+           age=23)
 
 
 By using type aliases on validation types, the intent of the attribute is
