@@ -32,6 +32,10 @@ from .meta import Uninstantiable
 
 _T = TypeVar('_T')
 
+if six.PY3:
+    unicode = str
+_STR_TYPE = unicode
+
 
 class _ValidationMeta(type):
     """A metaclass that returns handles custom type checks."""
@@ -246,11 +250,7 @@ class _BoundedMeta(Uninstantiable):
         Returns:
             A string representing the slice.
         """
-        if bound.start is not None and bound.stop is None:
-            return '{}:'.format(bound.start)
-        if bound.stop is not None and bound.start is None:
-            return ':{}'.format(bound.stop)
-        return '{}:{}'.format(bound.start, bound.stop)
+        return '{}:{}'.format(bound.start or '', bound.stop or '')
 
     @staticmethod
     def _identity(obj):
