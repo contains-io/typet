@@ -102,6 +102,23 @@ such as to types annotated using the ``typing`` module:
             return hash((self.x, self.y))
 
 
+Attributes can be declared optional either manually, by `using typing.Optional`
+or by using the PEP 484 implicit optional of a default value of `None`.
+
+.. code-block:: python
+
+    from typing import Optional
+
+    from typet import Object
+
+    class Point(Object):
+        x: Optional[int]
+        y: int = None
+
+    p1 = Point()   # Point(x=None, y=None)
+    p2 = Point(5)  # Point(x=5, y=None)
+
+
 Additionally, ``typet`` contains a suite of sliceable classes that will create
 bounded, or validated, versions of those types that always assert their values
 are within bounds; however, when an instance of a bounded type is instantiated,
@@ -123,18 +140,35 @@ bounds and contains an optional attribute.
 
 .. code-block:: python
 
-    from typet import Object, Bounded
+    from typet import Bounded, Object, String
 
     Age = Bounded[int, 0:150]
+    Name = String[1:50]
+    Hobby = String[1:300]
 
     class Person(Object):
-        name: str
+        name: Name
         age: Age
-        hobby: str = None
+        hobby: Hobby = None
 
-    Person('Jimothy', 23)                    # Okay, hobby will be None
+
+This class can be used in an intuitive way:
+
+
+.. code-block:: python
+
+    Person('Jimothy', 23)                    # Okay; hobby will be None
     Person('Jimothy', 230)                   # Raises TypeError
-    Person('Jimothy', 23, 'Figure Skating')  # Okay, and sets hobby
+    Person('Jimothy', 23, 'Figure Skating')  # Okay; and sets hobby
+    Person(name='Jimothy', age=23)           # Keyword arguments are okay.
+    Person('Jimothy',                        # As-is mixing and matching
+           hobby='Figure Skating',           # positional and keyword
+           age=23)                           # arguments.
+
+
+By using type aliases on validation types, the intent of the attribute is
+clear, while giving the advantages of removing boiler plate code, enforcing
+bounds, and declaring types for `mypy`.
 
 
 Python 2.7 to 3.5
