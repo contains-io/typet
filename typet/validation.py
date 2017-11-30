@@ -61,9 +61,11 @@ class _ValidationMeta(type):
             created class as well as within the bounds defined by the class.
         """
         try:
-            return bool(isinstance(other, cls.__type__) and cls(other))
+            return bool(isinstance(other, cls.__type__) and  # type: ignore
+                        cls(other))
         except ValueError:
             return False
+
 
 
 class _BoundedMeta(Uninstantiable):
