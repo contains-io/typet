@@ -67,7 +67,6 @@ class _ValidationMeta(type):
             return False
 
 
-
 class _BoundedMeta(Uninstantiable):
     """A metaclass that adds slicing to a class that creates new classes."""
 
