@@ -40,10 +40,8 @@ Import the ``typet`` types that you will use.
     from typet import Bounded, Object, String
 
 * `Object`, for composing complex objects
-* `Bound` to describe a type that validates its value is of the correct type
-   and within bounds upon instantiation
-* `String`, which will validate that it is instantiated with a string with a
-   length within the defined bounds.
+* `Bound` to describe a type that validates its value is of the correct type and within bounds upon instantiation
+* `String`, which will validate that it is instantiated with a string with a length within the defined bounds.
 
 Create Type Aliases That Describe the Intent of the Type
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
