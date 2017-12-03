@@ -215,7 +215,7 @@ such as to types annotated using the typing_ module:
             return hash((self.x, self.y))
 
 
-Attributes can be declared optional either manually, by using `typing.Optional`
+Attributes can be declared optional either manually, by using typing.Optional_
 or by using the PEP 484 implicit optional of a default value of `None`.
 
 .. code-block:: python
@@ -347,6 +347,7 @@ Note that, on Python 2, `String` instantiates `unicode` objects and not `str`.
 
 .. _typingplus: https://github.com/contains-io/typingplus/
 .. _typing: https://docs.python.org/3/library/typing.html
+.. _typing.Optional: https://docs.python.org/3/library/typing.html#typing.Optional
 
 .. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=master
    :target: https://travis-ci.org/contains-io/typet
