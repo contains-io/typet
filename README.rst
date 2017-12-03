@@ -1,5 +1,5 @@
-typet
-=====
+Type[T]
+=======
 
 |PyPI| |Python Versions| |Build Status| |Coverage Status| |Code Quality|
 
