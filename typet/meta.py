@@ -35,8 +35,6 @@ def metaclass(*metaclasses):
     # type: (*type) -> Callable[[type], type]
     """Create the class using all metaclasses.
 
-    The primary metaclass will be the metaclass already defined on the class.
-
     Args:
         metaclasses: A tuple of metaclasses that will be used to generate and
             replace a specified class.
@@ -46,11 +44,15 @@ def metaclass(*metaclasses):
         metaclasses.
     """
     def _inner(cls):
-        metabases = collections.OrderedDict(
+        # pragma pylint: disable=unused-variable
+        metabases = tuple(collections.OrderedDict(  # noqa: F841
             (c, None) for c in (metaclasses + (type(cls),))
-        ).keys()
-        class _Meta(*metabases):
-            pass
+        ).keys())
+        # pragma pylint: enable=unused-variable
+        _Meta = metabases[0]
+        for base in metabases[1:]:
+            class _Meta(base, _Meta):  # pylint: disable=function-redefined
+                pass
         return six.add_metaclass(_Meta)(cls)
     return _inner
 
