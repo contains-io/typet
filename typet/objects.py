@@ -276,7 +276,7 @@ def _strict_object_meta_fset(_, private_attr, type_):
                 .format(
                     _get_type_name(type(value)),
                     _get_type_name(type_)))
-        return setattr(self, private_attr, value)
+        vars(self)[private_attr] = value
 
     return _fset
 
@@ -313,7 +313,7 @@ def _object_meta_fset(_, private_attr, type_):
             TypeError: Raised when the value is not an instance of type_
                 and cannot be cast into a compatible object of type_.
         """
-        return setattr(self, private_attr, cast(type_, value))
+        vars(self)[private_attr] = cast(type_, value)
 
     return _fset
 
