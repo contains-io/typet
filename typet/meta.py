@@ -58,7 +58,11 @@ def metaclass(*metaclasses):
 
 
 class Singleton(type):
-    """A metaclass to turn a class into a singleton."""
+    """A metaclass to turn a class into a singleton.
+
+    If the instance already exists, Singleton will attempt to call
+    __singleton__ on the instance to allow the instance to update if necessary.
+    """
 
     __instance__ = None  # type: type
 
@@ -67,6 +71,11 @@ class Singleton(type):
         """Instantiate the class only once."""
         if not cls.__instance__:
             cls.__instance__ = super(Singleton, cls).__call__(*args, **kwargs)
+        else:
+            try:
+                cls.__instance__.__singleton__(*args, **kwargs)  # type: ignore
+            except AttributeError:
+                pass
         return cls.__instance__
 
 
