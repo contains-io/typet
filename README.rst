@@ -163,7 +163,7 @@ Point objects can be used intuitively because they generate a standard
 
 A close equivalent traditional class would be much larger, would have to be
 updated for any new attributes, and wouldn't support more advanced casting,
-such as to types annotated using the ``typing`` module:
+such as to types annotated using the typing_ module:
 
 .. code-block:: python
 
@@ -253,7 +253,7 @@ coerce values into the annotated type.
     Point('2', 2.5)  # Raises TypeError
 
 `StrictObject` uses `is_instance` from typingplus_ to check types, so it's
-possible to use types from the ``typing`` library for stricter checking.
+possible to use types from the typing_ library for stricter checking.
 
 .. code-block:: python
 
@@ -346,6 +346,7 @@ Note that, on Python 2, `String` instantiates `unicode` objects and not `str`.
 
 
 .. _typingplus: https://github.com/contains-io/typingplus/
+.. _typing: https://docs.python.org/3/library/typing.html
 
 .. |Build Status| image:: https://travis-ci.org/contains-io/typet.svg?branch=master
    :target: https://travis-ci.org/contains-io/typet
