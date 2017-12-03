@@ -345,6 +345,92 @@ been added to simplify binding strings to specific lengths.
 Note that, on Python 2, `String` instantiates `unicode` objects and not `str`.
 
 
+Metaclasses and Utilities
+-------------------------
+
+Singleton
+~~~~~~~~~
+
+`Singleton` will cause a class to allow only one instance.
+
+.. code-block:: python
+
+    from typet import Singleton
+
+    class Config(metaclass=Singleton):
+        pass
+
+    c1 = Config()
+    c2 = Config()
+    assert c1 is c2  # Okay
+
+`Singleton` supports an optional `__singleton__` method on the class that will
+allow the instance to update if given new parameters.
+
+.. code-block:: python
+
+    from typet import Singleton
+
+    class Config(metaclass=Singleton):
+
+        def __init__(self, x):
+            self.x = x
+
+        def __singleton__(self, x=None):
+            if x:
+                self.x = x
+
+    c1 = Config(1)
+    c1.x                   # 1
+    c2 = Config()          # Okay because __init__ is not called.
+    c2.x                   # 1
+    c3 = Config(3)         # Calls __singleton__ if it exists.
+    c1.x                   # 3
+    c2.x                   # 3
+    c3.x                   # 3
+    assert c1 is c2 is c3  # Okay
+
+Additionally, there is a decorator, `@singleton` that can be used make a class
+a singleton, even if it already uses another metaclass. This is convenient for
+creating singleton Objects.
+
+.. code-block:: python
+
+    from typet import Object, singleton
+
+    @singleton
+    class Config(Object):
+        x: int
+
+    c1 = Config(1)
+    c2 = Config()    # Okay because __init__ is not called.
+    assert c1 is c2  # Okay
+
+
+@metaclass
+~~~~~~~~~~
+
+Type[T] contains a class decorator, `metaclass`, that will create a derivative
+metaclass from the given metaclasses and the metaclass used by the decorated
+class and recreate the class with the derived metaclass.
+
+Most metaclasses are not designed to be used in such a way, so careful testing
+must be performed when this decorator is to be used. It is primarily intended
+to ease use of additional metaclasses with Objects.
+
+.. code-block:: python
+
+    from typet import metaclass, Object, Singleton
+
+    @metaclass(Singleton)
+    class Config(Object):
+        x: int
+
+    c1 = Config(1)
+    c2 = Config()    # Okay because __init__ is not called.
+    assert c1 is c2  # Okay
+
+
 .. _typingplus: https://github.com/contains-io/typingplus/
 .. _typing: https://docs.python.org/3/library/typing.html
 .. _typing.Optional: https://docs.python.org/3/library/typing.html#typing.Optional
