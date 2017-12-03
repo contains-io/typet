@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
-"""A module containing common metaclasses.
+"""A module containing common metaclasses and utilites for working with them.
 
-Classes:
-    metaclass: A class decorator that will create the class using multiple
-        metaclasses.
+Metaclasses:
     Singleton: A metaclass to force a class to only ever be instantiated once.
     Uninstantiable: A metaclass that causes a class to be uninstantiable.
+
+Decorators:
+    metaclass: A class decorator that will create the class using multiple
+        metaclasses.
+    singleton: A class decorator that will make the class a singleton, even if
+        the class already has a metaclass.
 """
 
 from __future__ import unicode_literals
@@ -22,6 +26,7 @@ import six
 __all__ = (
     'metaclass',
     'Singleton',
+    'singleton',
     'Uninstantiable',
 )
 
@@ -61,6 +66,9 @@ class Singleton(type):
         if not cls.__instance__:
             cls.__instance__ = super(Singleton, cls).__call__(*args, **kwargs)
         return cls.__instance__
+
+
+singleton = metaclass(Singleton)
 
 
 class Uninstantiable(type):
