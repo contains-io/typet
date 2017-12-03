@@ -5,7 +5,7 @@ Type[T]
 
 *Types that make coding in Python quick and safe.*
 
-``typet`` works best with Python 3.6 or later. Prior to 3.6, object types must
+Type[T] works best with Python 3.6 or later. Prior to 3.6, object types must
 use comment type hint syntax.
 
 
@@ -32,7 +32,7 @@ Features
 Quick Start: Creating a `Person`
 --------------------------------
 
-Import the ``typet`` types that you will use.
+Import the Type[T] types that you will use.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
@@ -71,7 +71,7 @@ Compose a `Person` object Using Type Aliases
 Assigning a class attribute sets that value as the default value for instances
 of the `Object`. In this instance, `hobby` is assigned a default value of
 `None`; by convention, this tells Python that the type is `Optional[Hobby]`,
-and `typet` will allow `None` in addition to strings of the correct length.
+and Type[T] will allow `None` in addition to strings of the correct length.
 
 
 Put It All Together
@@ -106,7 +106,7 @@ attributes, and keyword arguments are also acceptable.
 Python 2.7 to 3.5
 ~~~~~~~~~~~~~~~~~
 
-``typet`` supports PEP 484 class comment type hints for defining an `Object`.
+Type[T] supports PEP 484 class comment type hints for defining an `Object`.
 
 .. code-block:: python
 
@@ -135,7 +135,7 @@ that it is optional; it must be specified explicitly in the type hint comment.
 `Object`
 ~~~~~~~~
 
-One of the cooler features of ``typet`` is the ability to create complex
+One of the cooler features of Type[T] is the ability to create complex
 objects with very little code. The following code creates an object that
 generates properties from the annotated class attributes that will ensure that
 only values of *int* or that can be coerced into *int* can be set. It also
@@ -271,7 +271,7 @@ possible to use types from the ``typing`` library for stricter checking.
 Validation Types
 ----------------
 
-``typet`` contains a suite of sliceable classes that will create bounded, or
+Type[T] contains a suite of sliceable classes that will create bounded, or
 validated, versions of those types that always assert their values are within
 bounds; however, when an instance of a bounded type is instantiated, the
 instance will be of the original type.
