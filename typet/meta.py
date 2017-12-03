@@ -3,6 +3,9 @@
 
 Metaclasses:
     Singleton: A metaclass to force a class to only ever be instantiated once.
+    IdempotentSingleton: A metaclass that will force a class to only create one
+        instance, but will call __init__ on the instance when new instantiation
+        attempts occur.
     Uninstantiable: A metaclass that causes a class to be uninstantiable.
 
 Decorators:
@@ -27,6 +30,7 @@ __all__ = (
     'metaclass',
     'Singleton',
     'singleton',
+    'IdempotentSingleton',
     'Uninstantiable',
 )
 
@@ -74,6 +78,27 @@ class Singleton(type):
         else:
             try:
                 cls.__instance__.__singleton__(*args, **kwargs)  # type: ignore
+            except AttributeError:
+                pass
+        return cls.__instance__
+
+
+class IdempotentSingleton(Singleton):
+    """A metaclass to turn a class into a singleton.
+
+    If the instance already exists, IdempotentSingleton will call __init__ on
+    the existing instance with the arguments given.
+    """
+
+    def __call__(cls, *args, **kwargs):
+        # type: (*Any, **Any) -> type
+        """Create one instance of the class and reinstantiate as necessary."""
+        if not cls.__instance__:
+            cls.__instance__ = super(IdempotentSingleton, cls).__call__(
+                *args, **kwargs)
+        else:
+            try:
+                cls.__instance__.__init__(*args, **kwargs)
             except AttributeError:
                 pass
         return cls.__instance__
