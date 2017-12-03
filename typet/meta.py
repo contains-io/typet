@@ -2,19 +2,52 @@
 """A module containing common metaclasses.
 
 Classes:
+    metaclass: A class decorator that will create the class using multiple
+        metaclasses.
     Singleton: A metaclass to force a class to only ever be instantiated once.
     Uninstantiable: A metaclass that causes a class to be uninstantiable.
 """
 
 from __future__ import unicode_literals
 
-from typingplus import Any  # noqa: F401 pylint: disable=unused-import
+import collections
+
+from typingplus import (  # noqa: F401 pylint: disable=unused-import
+    Any,
+    Callable
+)
+import six
 
 
 __all__ = (
+    'metaclass',
     'Singleton',
     'Uninstantiable',
 )
+
+
+def metaclass(*metaclasses):
+    # type: (*type) -> Callable[[type], type]
+    """Create the class using all metaclasses.
+
+    The primary metaclass will be the metaclass already defined on the class.
+
+    Args:
+        metaclasses: A tuple of metaclasses that will be used to generate and
+            replace a specified class.
+
+    Returns:
+        A decorator that will recreate the class using the specified
+        metaclasses.
+    """
+    def _inner(cls):
+        metabases = collections.OrderedDict(
+            (c, None) for c in (metaclasses + (type(cls),))
+        ).keys()
+        class _Meta(*metabases):
+            pass
+        return six.add_metaclass(_Meta)(cls)
+    return _inner
 
 
 class Singleton(type):
