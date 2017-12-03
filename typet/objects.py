@@ -171,7 +171,7 @@ def _create_typed_object_meta(get_fset):
             # type: (...) -> Any
             """Get attribute from self without revealing the private name."""
             try:
-                return getattr(self, private_attr)
+                return vars(self)[private_attr]
             except AttributeError:
                 raise AttributeError(
                     "'{}' object has no attribute '{}'".format(
