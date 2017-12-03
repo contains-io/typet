@@ -390,6 +390,10 @@ allow the instance to update if given new parameters.
     c3.x                   # 3
     assert c1 is c2 is c3  # Okay
 
+
+@singleton
+~~~~~~~~~~
+
 Additionally, there is a decorator, `@singleton` that can be used make a class
 a singleton, even if it already uses another metaclass. This is convenient for
 creating singleton Objects.
@@ -410,7 +414,7 @@ creating singleton Objects.
 @metaclass
 ~~~~~~~~~~
 
-Type[T] contains a class decorator, `metaclass`, that will create a derivative
+Type[T] contains a class decorator, `@metaclass`, that will create a derivative
 metaclass from the given metaclasses and the metaclass used by the decorated
 class and recreate the class with the derived metaclass.
 
