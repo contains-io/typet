@@ -329,7 +329,7 @@ that takes two arguments and uses `len` as the comparison method.
 `String`
 ~~~~~~~~
 
-`str` and `len` are commonly used together, so a special type, `String` has
+`str` and `len` are commonly used together so a special type, `String`, has
 been added to simplify binding strings to specific lengths.
 
 .. code-block:: python
