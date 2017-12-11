@@ -185,7 +185,8 @@ def _create_typed_object_meta(get_fset):
         def __new__(mcs,  # type: Type[_AnnotatedObjectMeta]
                     name,  # type: str
                     bases,  # type: List[type]
-                    attrs  # type: Dict[str, Any]
+                    attrs,  # type: Dict[str, Any]
+                    **kwargs  # type: Dict[str, Any]
                     ):
             # type: (...) -> type
             """Create class objs that replaces annotated attrs with properties.
@@ -207,8 +208,8 @@ def _create_typed_object_meta(get_fset):
             use_comment_type_hints = (
                 not annotations and attrs.get('__module__') != __name__)
             if use_comment_type_hints:
-                source, globalns, localns = _get_class_frame_source(name)
-                annotations = get_type_hints(source, globalns, localns)
+                frame_source = _get_class_frame_source(name)
+                annotations = get_type_hints(*frame_source)
             names = list(attrs) + list(annotations)
             typed_attrs = {}
             for attr in names:
@@ -238,7 +239,7 @@ def _create_typed_object_meta(get_fset):
                 NoneType not in getattr(annotations[attr], '__args__', ())
             ]
             return super(_AnnotatedObjectMeta, mcs).__new__(
-                mcs, name, bases, typed_attrs)
+                mcs, name, bases, typed_attrs, **kwargs)
 
     return _AnnotatedObjectMeta
 
