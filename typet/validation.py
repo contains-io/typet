@@ -489,4 +489,5 @@ class String(object):
     ValueError: The value of len('abcdefghijk') [11] is above the maximum ...
     """
 
+
 NonEmptyString = String[1:]
