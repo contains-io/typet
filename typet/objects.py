@@ -271,12 +271,17 @@ def _strict_object_meta_fset(_, private_attr, type_):
         Raises:
             TypeError: Raised when the value is not an instance of type_.
         """
-        if not is_instance(value, type_):
+        rtype = type_
+        if isinstance(type_, TypeVar):
+            type_map = dict(zip(
+                self.__parameters__, self.__orig_class__.__args__))
+            rtype = type_map[type_]
+        if not is_instance(value, rtype):
             raise TypeError(
                 'Cannot assign value of type {} to attribute of type {}.'
                 .format(
                     _get_type_name(type(value)),
-                    _get_type_name(type_)))
+                    _get_type_name(rtype)))
         vars(self)[private_attr] = value
 
     return _fset
@@ -314,7 +319,12 @@ def _object_meta_fset(_, private_attr, type_):
             TypeError: Raised when the value is not an instance of type_
                 and cannot be cast into a compatible object of type_.
         """
-        vars(self)[private_attr] = cast(type_, value)
+        rtype = type_
+        if isinstance(type_, TypeVar):
+            type_map = dict(zip(
+                self.__parameters__, self.__orig_class__.__args__))
+            rtype = type_map[type_]
+        vars(self)[private_attr] = cast(rtype, value)
 
     return _fset
 
