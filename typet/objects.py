@@ -238,7 +238,7 @@ def _create_typed_object_meta(get_fset):
                     attrs[attr] is None and use_comment_type_hints) and
                 NoneType not in getattr(annotations[attr], '__args__', ())
             ]
-            return super(_AnnotatedObjectMeta, mcs).__new__(
+            return super(_AnnotatedObjectMeta, mcs).__new__(  # type: ignore
                 mcs, name, bases, typed_attrs, **kwargs)
 
     return _AnnotatedObjectMeta

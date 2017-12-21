@@ -414,7 +414,7 @@ class _StringMeta(_LengthBoundedMeta):
 
     def __call__(cls, *args, **kwargs):
         """Instantiate a string object."""
-        return _STR_TYPE(*args, **kwargs)
+        return String[1:](*args, **kwargs)
 
     def __instancecheck__(self, other):
         # type: (Any) -> bool

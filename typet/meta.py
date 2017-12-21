@@ -98,7 +98,7 @@ class IdempotentSingleton(Singleton):
                 *args, **kwargs)
         else:
             try:
-                cls.__instance__.__init__(*args, **kwargs)
+                cls.__instance__.__init__(*args, **kwargs)  # type: ignore
             except AttributeError:
                 pass
         return cls.__instance__
