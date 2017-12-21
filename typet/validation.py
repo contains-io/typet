@@ -414,7 +414,7 @@ class _StringMeta(_LengthBoundedMeta):
 
     def __call__(cls, *args, **kwargs):
         """Instantiate a string object."""
-        return String[1:](*args, **kwargs)
+        return _STR_TYPE(*args, **kwargs)
 
     def __instancecheck__(self, other):
         # type: (Any) -> bool
@@ -488,3 +488,5 @@ class String(object):
         ...
     ValueError: The value of len('abcdefghijk') [11] is above the maximum ...
     """
+
+NonEmptyString = String[1:]
