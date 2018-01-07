@@ -78,7 +78,7 @@ class Singleton(type):
         else:
             try:
                 cls.__instance__.__singleton__(*args, **kwargs)  # type: ignore
-            except AttributeError:
+            except (AttributeError, TypeError):
                 pass
         return cls.__instance__
 
@@ -99,7 +99,7 @@ class IdempotentSingleton(Singleton):
         else:
             try:
                 cls.__instance__.__init__(*args, **kwargs)  # type: ignore
-            except AttributeError:
+            except (AttributeError, TypeError):
                 pass
         return cls.__instance__
 
