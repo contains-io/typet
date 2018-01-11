@@ -22,7 +22,7 @@ setup(
     packages=find_packages(exclude=['tests', 'docs']),
     install_requires=[
         'pathlib2',
-        'typingplus >= 2.1.1, < 3'
+        'typingplus >= 2.1.2, < 3'
     ],
     setup_requires=[
         'pytest-runner',
