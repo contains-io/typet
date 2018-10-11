@@ -27,7 +27,7 @@ setup(
     ],
     license="MIT",
     packages=find_packages(exclude=["tests", "docs"]),
-    install_requires=["pathlib2", "typingplus >= 2.2.1, < 3"],
+    install_requires=["pathlib2", "typingplus >= 2.2.2, < 3"],
     setup_requires=["pytest-runner", "setuptools_scm"],
     tests_require=["pytest >= 3.2"],
     classifiers=[

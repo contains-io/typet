@@ -167,6 +167,16 @@ def test_object():
     assert x.x == "5"
 
 
+def test_object_with_default():
+    """Test that Object uses a default value."""
+
+    class X(typet.Object):
+        x = 5  # type: Optional[int]
+
+    x = X()
+    assert x.x == 5
+
+
 def test_object_comments():
     """Simple test to verify basic Object functionality with comment hints."""
 
