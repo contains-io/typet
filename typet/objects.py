@@ -290,7 +290,7 @@ def _strict_object_meta_fset(_, private_attr, type_):
             rtype = type_map[type_]
         if not is_instance(value, rtype):
             raise TypeError(
-                "Cannot assign value of type {} to attribute of type {}.".format(
+                "Cannot assign type of {} to attribute of type {}.".format(
                     _get_type_name(type(value)), _get_type_name(rtype)
                 )
             )
