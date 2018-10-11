@@ -21,8 +21,9 @@ except ImportError:
 
 def _valid(name, type_, predicate):
     new_type = Valid[type_, predicate]
-    setattr(new_type, '__class_repr__', '{}.{}'.format(
-        predicate.__module__, name))
+    setattr(
+        new_type, "__class_repr__", "{}.{}".format(predicate.__module__, name)
+    )
     return new_type
 
 
@@ -50,6 +51,6 @@ def exists(path):
         return os.path.exists(os.path.abspath(os.path.expanduser(str(path))))
 
 
-Dir = _valid('Dir', pathlib.Path, is_dir)
-File = _valid('File', pathlib.Path, is_file)
-ExistingPath = _valid('ExistingPath', pathlib.Path, exists)
+Dir = _valid("Dir", pathlib.Path, is_dir)
+File = _valid("File", pathlib.Path, is_file)
+ExistingPath = _valid("ExistingPath", pathlib.Path, exists)

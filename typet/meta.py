@@ -21,17 +21,17 @@ import collections
 
 from typingplus import (  # noqa: F401 pylint: disable=unused-import
     Any,
-    Callable
+    Callable,
 )
 import six
 
 
 __all__ = (
-    'metaclass',
-    'Singleton',
-    'singleton',
-    'IdempotentSingleton',
-    'Uninstantiable',
+    "metaclass",
+    "Singleton",
+    "singleton",
+    "IdempotentSingleton",
+    "Uninstantiable",
 )
 
 
@@ -47,17 +47,23 @@ def metaclass(*metaclasses):
         A decorator that will recreate the class using the specified
         metaclasses.
     """
+
     def _inner(cls):
         # pragma pylint: disable=unused-variable
-        metabases = tuple(collections.OrderedDict(  # noqa: F841
-            (c, None) for c in (metaclasses + (type(cls),))
-        ).keys())
+        metabases = tuple(
+            collections.OrderedDict(  # noqa: F841
+                (c, None) for c in (metaclasses + (type(cls),))
+            ).keys()
+        )
         # pragma pylint: enable=unused-variable
         _Meta = metabases[0]
         for base in metabases[1:]:
+
             class _Meta(base, _Meta):  # pylint: disable=function-redefined
                 pass
+
         return six.add_metaclass(_Meta)(cls)
+
     return _inner
 
 
@@ -95,7 +101,8 @@ class IdempotentSingleton(Singleton):
         """Create one instance of the class and reinstantiate as necessary."""
         if not cls.__instance__:
             cls.__instance__ = super(IdempotentSingleton, cls).__call__(
-                *args, **kwargs)
+                *args, **kwargs
+            )
         else:
             try:
                 cls.__instance__.__init__(*args, **kwargs)  # type: ignore
@@ -113,4 +120,4 @@ class Uninstantiable(type):
     def __call__(cls, *args, **kwargs):
         # type: (*Any, **Any) -> None
         """Do not allow the class to be instantiated."""
-        raise TypeError('Type {} cannot be instantiated.'.format(cls.__name__))
+        raise TypeError("Type {} cannot be instantiated.".format(cls.__name__))

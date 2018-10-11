@@ -14,10 +14,7 @@ import types
 import typingplus as typing
 
 
-__all__ = (
-    'DefType',
-    'NoneType',
-)
+__all__ = ("DefType", "NoneType")
 
 
 DefType = typing.Union[types.FunctionType, types.MethodType]
