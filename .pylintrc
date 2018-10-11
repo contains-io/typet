@@ -1,5 +1,5 @@
 [MASTER]
-disable=no-value-for-parameter,protected-access,too-few-public-methods,bad-continuation,invalid-name,no-member,locally-disabled,locally-enabled
+disable=useless-object-inheritance,bad-mcs-classmethod-argument,no-value-for-parameter,protected-access,too-few-public-methods,bad-continuation,invalid-name,no-member,locally-disabled,locally-enabled
 reports=no
 known-standard-library=typing
 
