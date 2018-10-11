@@ -37,15 +37,10 @@ from typingplus import (  # noqa: F401 pylint: disable=unused-import
 from .types import NoneType  # pylint: disable=redefined-builtin
 
 
-__all__ = (
-    'BaseStrictObject',
-    'StrictObject',
-    'BaseObject',
-    'Object'
-)
+__all__ = ("BaseStrictObject", "StrictObject", "BaseObject", "Object")
 
 
-_T = TypeVar('_T')
+_T = TypeVar("_T")
 
 
 def _get_type_name(type_):
@@ -60,9 +55,9 @@ def _get_type_name(type_):
         language sentence.
     """
     name = repr(type_)
-    if name.startswith('<'):
-        name = getattr(type_, '__qualname__', getattr(type_, '__name__', ''))
-    return name.rsplit('.', 1)[-1] or repr(type_)
+    if name.startswith("<"):
+        name = getattr(type_, "__qualname__", getattr(type_, "__name__", ""))
+    return name.rsplit(".", 1)[-1] or repr(type_)
 
 
 def _get_class_frame_source(class_name):
@@ -82,11 +77,10 @@ def _get_class_frame_source(class_name):
     for frame_info in inspect.stack():
         try:
             with open(frame_info[1]) as fp:
-                src = ''.join(
-                    fp.readlines()[frame_info[2] - 1:])
+                src = "".join(fp.readlines()[frame_info[2] - 1 :])
         except IOError:
             continue
-        if re.search(r'\bclass\b\s+\b{}\b'.format(class_name), src):
+        if re.search(r"\bclass\b\s+\b{}\b".format(class_name), src):
             reader = six.StringIO(src).readline
             tokens = tokenize.generate_tokens(reader)
             source_tokens = []
@@ -103,20 +97,22 @@ def _get_class_frame_source(class_name):
                         return (
                             tokenize.untokenize(source_tokens),
                             frame_info[0].f_globals,
-                            frame_info[0].f_locals
+                            frame_info[0].f_locals,
                         )
                 elif not has_base_level:
                     has_base_level = True
                     base_indent_level = indent_level
     raise TypeError(
-        'Unable to retrieve source for class "{}"'.format(class_name))
+        'Unable to retrieve source for class "{}"'.format(class_name)
+    )
 
 
-def _is_propertyable(names,  # type: List[str]
-                     attrs,  # type: Dict[str, Any]
-                     annotations,  # type: Dict[str, type]
-                     attr  # Dict[str, Any]
-                     ):
+def _is_propertyable(
+    names,  # type: List[str]
+    attrs,  # type: Dict[str, Any]
+    annotations,  # type: Dict[str, type]
+    attr,  # Dict[str, Any]
+):
     # type: (...) -> bool
     """Determine if an attribute can be replaced with a property.
 
@@ -129,11 +125,13 @@ def _is_propertyable(names,  # type: List[str]
     Returns:
         True if the attribute can be replaced with a property; else False.
     """
-    return (attr in annotations and
-            not attr.startswith('_') and
-            not attr.isupper() and
-            '__{}'.format(attr) not in names and
-            not isinstance(getattr(attrs, attr, None), types.MethodType))
+    return (
+        attr in annotations
+        and not attr.startswith("_")
+        and not attr.isupper()
+        and "__{}".format(attr) not in names
+        and not isinstance(getattr(attrs, attr, None), types.MethodType)
+    )
 
 
 def _create_typed_object_meta(get_fset):
@@ -152,6 +150,7 @@ def _create_typed_object_meta(get_fset):
         that will guarantee the type of the stored value matches the
         annotation.
     """
+
     def _get_fget(attr, private_attr, type_):
         # type: (str, str, Type[_T]) -> Callable[[], Any]
         """Create a property getter method for an attribute.
@@ -167,6 +166,7 @@ def _create_typed_object_meta(get_fset):
             A function that takes self and retrieves the private attribute from
             self.
         """
+
         def _fget(self):
             # type: (...) -> Any
             """Get attribute from self without revealing the private name."""
@@ -175,19 +175,22 @@ def _create_typed_object_meta(get_fset):
             except AttributeError:
                 raise AttributeError(
                     "'{}' object has no attribute '{}'".format(
-                        _get_type_name(type_), attr))
+                        _get_type_name(type_), attr
+                    )
+                )
 
         return _fget
 
     class _AnnotatedObjectMeta(type):
         """A metaclass that reads annotations from a class definition."""
 
-        def __new__(mcs,  # type: Type[_AnnotatedObjectMeta]
-                    name,  # type: str
-                    bases,  # type: List[type]
-                    attrs,  # type: Dict[str, Any]
-                    **kwargs  # type: Dict[str, Any]
-                    ):
+        def __new__(
+            mcs,  # type: Type[_AnnotatedObjectMeta]
+            name,  # type: str
+            bases,  # type: List[type]
+            attrs,  # type: Dict[str, Any]
+            **kwargs  # type: Dict[str, Any]
+        ):
             # type: (...) -> type
             """Create class objs that replaces annotated attrs with properties.
 
@@ -204,9 +207,10 @@ def _create_typed_object_meta(get_fset):
                 non-method attributes replaced by property objects that
                 validate against the annotated type.
             """
-            annotations = attrs.get('__annotations__', {})
+            annotations = attrs.get("__annotations__", {})
             use_comment_type_hints = (
-                not annotations and attrs.get('__module__') != __name__)
+                not annotations and attrs.get("__module__") != __name__
+            )
             if use_comment_type_hints:
                 frame_source = _get_class_frame_source(name)
                 annotations = get_type_hints(*frame_source)
@@ -215,31 +219,39 @@ def _create_typed_object_meta(get_fset):
             for attr in names:
                 typed_attrs[attr] = attrs.get(attr)
                 if _is_propertyable(names, attrs, annotations, attr):
-                    private_attr = '__{}'.format(attr)
+                    private_attr = "__{}".format(attr)
                     if attr in attrs:
                         typed_attrs[private_attr] = attrs[attr]
                     type_ = (
-                        Optional[annotations[attr]] if
-                        not use_comment_type_hints and
-                        attr in attrs and
-                        attrs[attr] is None
+                        Optional[annotations[attr]]
+                        if not use_comment_type_hints
+                        and attr in attrs
+                        and attrs[attr] is None
                         else annotations[attr]
                     )
                     typed_attrs[attr] = property(
                         _get_fget(attr, private_attr, type_),
-                        get_fset(attr, private_attr, type_)
+                        get_fset(attr, private_attr, type_),
                     )
-            properties = [attr for attr in annotations if _is_propertyable(
-                          names, attrs, annotations, attr)]
-            typed_attrs['_tp__typed_properties'] = properties
-            typed_attrs['_tp__required_typed_properties'] = [
-                attr for attr in properties if (
-                    attr not in attrs or
-                    attrs[attr] is None and use_comment_type_hints) and
-                NoneType not in getattr(annotations[attr], '__args__', ())
+            properties = [
+                attr
+                for attr in annotations
+                if _is_propertyable(names, attrs, annotations, attr)
+            ]
+            typed_attrs["_tp__typed_properties"] = properties
+            typed_attrs["_tp__required_typed_properties"] = [
+                attr
+                for attr in properties
+                if (
+                    attr not in attrs
+                    or attrs[attr] is None
+                    and use_comment_type_hints
+                )
+                and NoneType not in getattr(annotations[attr], "__args__", ())
             ]
             return super(_AnnotatedObjectMeta, mcs).__new__(  # type: ignore
-                mcs, name, bases, typed_attrs, **kwargs)
+                mcs, name, bases, typed_attrs, **kwargs
+            )
 
     return _AnnotatedObjectMeta
 
@@ -259,9 +271,8 @@ def _strict_object_meta_fset(_, private_attr, type_):
         A method that takes self and a value and stores that value on self
         in the private attribute iff the value is an instance of type_.
     """
-    def _fset(self,
-              value  # type: Any
-              ):
+
+    def _fset(self, value):  # type: Any
         # type: (...) -> None
         """Set the value on self iff the value is an instance of type_.
 
@@ -273,15 +284,16 @@ def _strict_object_meta_fset(_, private_attr, type_):
         """
         rtype = type_
         if isinstance(type_, TypeVar):
-            type_map = dict(zip(
-                self.__parameters__, self.__orig_class__.__args__))
+            type_map = dict(
+                zip(self.__parameters__, self.__orig_class__.__args__)
+            )
             rtype = type_map[type_]
         if not is_instance(value, rtype):
             raise TypeError(
-                'Cannot assign value of type {} to attribute of type {}.'
-                .format(
-                    _get_type_name(type(value)),
-                    _get_type_name(rtype)))
+                "Cannot assign value of type {} to attribute of type {}.".format(
+                    _get_type_name(type(value)), _get_type_name(rtype)
+                )
+            )
         vars(self)[private_attr] = value
 
     return _fset
@@ -306,9 +318,8 @@ def _object_meta_fset(_, private_attr, type_):
         in the private attribute if the value is not an instance of type_
         and cannot be cast into type_.
     """
-    def _fset(self,
-              value  # type: Any
-              ):
+
+    def _fset(self, value):  # type: Any
         # type: (...) -> None
         """Set the value on self and coerce it to type_ if necessary.
 
@@ -321,8 +332,9 @@ def _object_meta_fset(_, private_attr, type_):
         """
         rtype = type_
         if isinstance(type_, TypeVar):
-            type_map = dict(zip(
-                self.__parameters__, self.__orig_class__.__args__))
+            type_map = dict(
+                zip(self.__parameters__, self.__orig_class__.__args__)
+            )
             rtype = type_map[type_]
         vars(self)[private_attr] = cast(rtype, value)
 
@@ -344,22 +356,26 @@ class _BaseAnnotatedObject(object):
         for attr, value in positionals:
             if attr in kwargs:
                 raise TypeError(
-                    "__init__() got multiple values for argument '{}'"
-                    .format(attr))
+                    "__init__() got multiple values for argument '{}'".format(
+                        attr
+                    )
+                )
             kwargs[attr] = value
         missing = [attr for attr in required if attr not in kwargs]
         if missing:
             num_missing = len(missing)
             if num_missing > 1:
-                args = ', '.join("'{}'".format(m) for m in missing[:-1])
+                args = ", ".join("'{}'".format(m) for m in missing[:-1])
                 if num_missing > 2:
-                    args += ','
+                    args += ","
                 args += " and '{}'".format(missing[-1])
             else:
                 args = "'{}'".format(missing[0])
             raise TypeError(
-                '__init__() missing {} required argument{}: {}'.format(
-                    num_missing, 's' if num_missing > 1 else '', args))
+                "__init__() missing {} required argument{}: {}".format(
+                    num_missing, "s" if num_missing > 1 else "", args
+                )
+            )
         for attr, value in six.iteritems(kwargs):
             if attr in properties:
                 setattr(self, attr, value)
@@ -367,12 +383,13 @@ class _BaseAnnotatedObject(object):
     def __repr__(self):
         # type: () -> str
         """Return a Python readable representation of the class."""
-        return '{}({})'.format(
+        return "{}({})".format(
             self.__class__.__name__,
-            ', '.join(
-                '{}={}'.format(attr_name, repr(getattr(self, attr_name)))
-                for attr_name in
-                self._tp__typed_properties))  # type: ignore
+            ", ".join(
+                "{}={}".format(attr_name, repr(getattr(self, attr_name)))
+                for attr_name in self._tp__typed_properties
+            ),
+        )  # type: ignore
 
 
 class _AnnotatedObjectComparisonMixin(object):
@@ -386,8 +403,7 @@ class _AnnotatedObjectComparisonMixin(object):
                 that was not created by _AnnotatedObjectMeta.
         """
         try:
-            return tuple(getattr(self, p) for p in
-                         self._tp__typed_properties)
+            return tuple(getattr(self, p) for p in self._tp__typed_properties)
         except AttributeError:
             raise NotImplementedError
 
@@ -405,8 +421,10 @@ class _AnnotatedObjectComparisonMixin(object):
         """
         if other.__class__ is not self.__class__:
             return NotImplemented
-        return (self._tp__get_typed_properties() ==
-                other._tp__get_typed_properties())
+        return (
+            self._tp__get_typed_properties()
+            == other._tp__get_typed_properties()
+        )
 
     def __ne__(self, other):
         """Test if two objects of the same class are not equal.
@@ -438,8 +456,10 @@ class _AnnotatedObjectComparisonMixin(object):
         """
         if other.__class__ is not self.__class__:
             return NotImplemented
-        return (self._tp__get_typed_properties() <
-                other._tp__get_typed_properties())
+        return (
+            self._tp__get_typed_properties()
+            < other._tp__get_typed_properties()
+        )
 
     def __le__(self, other):
         """Test if self is less than or equal an object of the same class.

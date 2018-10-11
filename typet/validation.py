@@ -24,13 +24,13 @@ from typingplus import (  # noqa: F401 pylint: disable=unused-import
     Tuple,
     Type,
     TypeVar,
-    Union
+    Union,
 )
 
 from .meta import Uninstantiable
 
 
-_T = TypeVar('_T')
+_T = TypeVar("_T")
 
 if six.PY3:
     unicode = str  # pylint: disable=redefined-builtin
@@ -61,8 +61,9 @@ class _ValidationMeta(type):
             created class as well as within the bounds defined by the class.
         """
         try:
-            return bool(isinstance(other, cls.__type__) and  # type: ignore
-                        cls(other))
+            return bool(
+                isinstance(other, cls.__type__) and cls(other)  # type: ignore
+            )
         except ValueError:
             return False
 
@@ -107,37 +108,50 @@ class _BoundedMeta(Uninstantiable):
                         constructor.
                 """
                 instance = instantiate(
-                    BaseClass, type_, __value, *args, **kwargs)
+                    BaseClass, type_, __value, *args, **kwargs
+                )
                 cmp_val = keyfunc(instance)
                 if bound.start is not None or bound.stop is not None:
                     if bound.start is not None and cmp_val < bound.start:
                         if keyfunc is not identity:
                             raise ValueError(
-                                'The value of {}({}) [{}] is below the minimum'
-                                ' allowed value of {}.'.format(
-                                    keyfunc_name, repr(__value), repr(cmp_val),
-                                    bound.start))
+                                "The value of {}({}) [{}] is below the minimum"
+                                " allowed value of {}.".format(
+                                    keyfunc_name,
+                                    repr(__value),
+                                    repr(cmp_val),
+                                    bound.start,
+                                )
+                            )
                         raise ValueError(
-                            'The value {} is below the minimum allowed value '
-                            'of {}.'.format(repr(__value), bound.start))
+                            "The value {} is below the minimum allowed value "
+                            "of {}.".format(repr(__value), bound.start)
+                        )
                     if bound.stop is not None and cmp_val > bound.stop:
                         if keyfunc is not identity:
                             raise ValueError(
-                                'The value of {}({}) [{}] is above the maximum'
-                                ' allowed value of {}.'.format(
-                                    keyfunc_name, repr(__value), repr(cmp_val),
-                                    bound.stop))
+                                "The value of {}({}) [{}] is above the maximum"
+                                " allowed value of {}.".format(
+                                    keyfunc_name,
+                                    repr(__value),
+                                    repr(cmp_val),
+                                    bound.stop,
+                                )
+                            )
                         raise ValueError(
-                            'The value {} is above the maximum allowed value '
-                            'of {}.'.format(repr(__value), bound.stop))
+                            "The value {} is above the maximum allowed value "
+                            "of {}.".format(repr(__value), bound.stop)
+                        )
                 elif not cmp_val:
                     raise ValueError(
-                        '{}({}) is False'.format(keyfunc_name, repr(instance)))
+                        "{}({}) is False".format(keyfunc_name, repr(instance))
+                    )
                 return instance
 
         _BoundedSubclass.__type__ = type_
         _BoundedSubclass.__class_repr__ = cls._get_class_repr(
-            type_, bound, keyfunc, keyfunc_name)
+            type_, bound, keyfunc, keyfunc_name
+        )
         return _BoundedSubclass
 
     @staticmethod
@@ -152,8 +166,10 @@ class _BoundedMeta(Uninstantiable):
             A tuple containing two values: a base class, and a metaclass.
         """
         try:
+
             class _(type_):  # type: ignore
                 """Check if type_ is subclassable."""
+
             BaseClass = type_
         except TypeError:
             BaseClass = object
@@ -203,12 +219,19 @@ class _BoundedMeta(Uninstantiable):
             A string representing the class.
         """
         if keyfunc is not cls._default:
-            return '{}.{}[{}, {}, {}]'.format(
-                cls.__module__, cls.__name__, cls._get_fullname(type_),
-                cls._get_bound_repr(bound), keyfunc_name)
-        return '{}.{}[{}, {}]'.format(
-            cls.__module__, cls.__name__, cls._get_fullname(type_),
-            cls._get_bound_repr(bound))
+            return "{}.{}[{}, {}, {}]".format(
+                cls.__module__,
+                cls.__name__,
+                cls._get_fullname(type_),
+                cls._get_bound_repr(bound),
+                keyfunc_name,
+            )
+        return "{}.{}[{}, {}]".format(
+            cls.__module__,
+            cls.__name__,
+            cls._get_fullname(type_),
+            cls._get_bound_repr(bound),
+        )
 
     def _get_args(cls, args):
         # type: (tuple) -> Tuple[Any, slice, Callable]
@@ -227,7 +250,8 @@ class _BoundedMeta(Uninstantiable):
         """
         if not isinstance(args, tuple):
             raise TypeError(
-                '{}[...] takes two or three arguments.'.format(cls.__name__))
+                "{}[...] takes two or three arguments.".format(cls.__name__)
+            )
         elif len(args) == 2:
             type_, bound = args
             keyfunc = cls._identity
@@ -235,7 +259,8 @@ class _BoundedMeta(Uninstantiable):
             type_, bound, keyfunc = args
         else:
             raise TypeError(
-                'Too many parameters given to {}[...]'.format(cls.__name__))
+                "Too many parameters given to {}[...]".format(cls.__name__)
+            )
         if not isinstance(bound, slice):
             bound = slice(bound)
         return eval_type(type_), bound, keyfunc
@@ -251,7 +276,7 @@ class _BoundedMeta(Uninstantiable):
         Returns:
             A string representing the slice.
         """
-        return '{}:{}'.format(bound.start or '', bound.stop or '')
+        return "{}:{}".format(bound.start or "", bound.stop or "")
 
     @staticmethod
     def _identity(obj):
@@ -279,11 +304,11 @@ class _BoundedMeta(Uninstantiable):
         Returns:
             The full class name of the object.
         """
-        if not hasattr(obj, '__name__'):
+        if not hasattr(obj, "__name__"):
             obj = obj.__class__
-        if obj.__module__ in ('builtins', '__builtin__'):
+        if obj.__module__ in ("builtins", "__builtin__"):
             return obj.__name__
-        return '{}.{}'.format(obj.__module__, obj.__name__)
+        return "{}.{}".format(obj.__module__, obj.__name__)
 
 
 @six.add_metaclass(_BoundedMeta)
@@ -330,7 +355,8 @@ class _LengthBoundedMeta(_BoundedMeta):
         """
         if not isinstance(args, tuple) or not len(args) == 2:
             raise TypeError(
-                '{}[...] takes exactly two arguments.'.format(cls.__name__))
+                "{}[...] takes exactly two arguments.".format(cls.__name__)
+            )
         return super(_LengthBoundedMeta, cls)._get_args(args + (len,))
 
 
@@ -373,9 +399,11 @@ class _ValidationBoundedMeta(_BoundedMeta):
         if isinstance(args, tuple):
             if not len(args) == 2:
                 raise TypeError(
-                    '{}[...] takes one or two argument.'.format(cls.__name__))
+                    "{}[...] takes one or two argument.".format(cls.__name__)
+                )
             return super(_ValidationBoundedMeta, cls)._get_args(
-                (args[0], None, args[1]))
+                (args[0], None, args[1])
+            )
         return super(_ValidationBoundedMeta, cls)._get_args((Any, None, args))
 
     def _get_class_repr(cls, type_, bound, keyfunc, keyfunc_name):
@@ -393,11 +421,13 @@ class _ValidationBoundedMeta(_BoundedMeta):
             A string representing the class.
         """
         if type_ is not Any:
-            return '{}.{}[{}, {}]'.format(
-                cls.__module__, cls.__name__, cls._get_fullname(type_),
-                keyfunc_name)
-        return '{}.{}[{}]'.format(
-            cls.__module__, cls.__name__, keyfunc_name)
+            return "{}.{}[{}, {}]".format(
+                cls.__module__,
+                cls.__name__,
+                cls._get_fullname(type_),
+                keyfunc_name,
+            )
+        return "{}.{}[{}]".format(cls.__module__, cls.__name__, keyfunc_name)
 
 
 @six.add_metaclass(_ValidationBoundedMeta)
@@ -443,7 +473,8 @@ class _StringMeta(_LengthBoundedMeta):
         """
         if isinstance(args, tuple):
             raise TypeError(
-                '{}[...] takes exactly one argument.'.format(cls.__name__))
+                "{}[...] takes exactly one argument.".format(cls.__name__)
+            )
         return super(_StringMeta, cls)._get_args((_STR_TYPE, args))
 
     def _get_class_repr(cls, type_, bound, keyfunc, keyfunc_name):
@@ -461,8 +492,9 @@ class _StringMeta(_LengthBoundedMeta):
         Returns:
             A string representing the class.
         """
-        return '{}.{}[{}]'.format(
-            cls.__module__, cls.__name__, cls._get_bound_repr(bound))
+        return "{}.{}[{}]".format(
+            cls.__module__, cls.__name__, cls._get_bound_repr(bound)
+        )
 
 
 @six.add_metaclass(_StringMeta)
