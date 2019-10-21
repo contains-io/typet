@@ -15,16 +15,7 @@ Classes:
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import inspect
-import re
-import tokenize
-import types
-
-import six
-from typingplus import (  # noqa: F401 pylint: disable=unused-import
-    cast,
-    get_type_hints,
-    is_instance,
+from typing import (  # noqa: F401 pylint: disable=unused-import
     Any,
     Callable,
     Dict,
@@ -33,8 +24,19 @@ from typingplus import (  # noqa: F401 pylint: disable=unused-import
     Type,
     TypeVar,
 )
+import inspect
+import re
+import tokenize
+import types
+
+import six
 
 from .types import NoneType  # pylint: disable=redefined-builtin
+from .typing import (
+    cast,
+    get_type_hints,
+    is_instance
+)
 
 
 __all__ = ("BaseStrictObject", "StrictObject", "BaseObject", "Object")
@@ -272,7 +274,7 @@ def _strict_object_meta_fset(_, private_attr, type_):
         in the private attribute iff the value is an instance of type_.
     """
 
-    def _fset(self, value):  # type: Any
+    def _fset(self, value):
         # type: (...) -> None
         """Set the value on self iff the value is an instance of type_.
 
@@ -319,7 +321,7 @@ def _object_meta_fset(_, private_attr, type_):
         and cannot be cast into type_.
     """
 
-    def _fset(self, value):  # type: Any
+    def _fset(self, value):
         # type: (...) -> None
         """Set the value on self and coerce it to type_ if necessary.
 

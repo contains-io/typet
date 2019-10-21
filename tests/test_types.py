@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """Tests for annotation type hint casting."""
 
+from typing import (  # noqa: F401 pylint: disable=unused-import
+    Any,
+    Optional,
+)
 import os.path
 import uuid
 
 import pytest
 import six
 
-from typingplus import (  # noqa: F401 pylint: disable=unused-import
-    is_instance,
-    Any,
-    Optional,
-)
+from typet.typing import is_instance
 import typet
 
 

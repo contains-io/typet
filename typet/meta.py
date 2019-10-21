@@ -17,12 +17,13 @@ Decorators:
 
 from __future__ import unicode_literals
 
-import collections
 
-from typingplus import (  # noqa: F401 pylint: disable=unused-import
+from typing import (  # noqa: F401 pylint: disable=unused-import
     Any,
     Callable,
 )
+import collections
+
 import six
 
 

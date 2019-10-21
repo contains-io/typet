@@ -10,8 +10,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import types
-
-import typingplus as typing
+import typing
 
 
 __all__ = ("DefType", "NoneType")

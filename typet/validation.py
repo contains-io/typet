@@ -15,9 +15,7 @@ Classes:
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import six
-from typingplus import (  # noqa: F401 pylint: disable=unused-import
-    eval_type,
+from typing import (  # noqa: F401 pylint: disable=unused-import
     Any,
     Callable,
     Optional,
@@ -27,7 +25,10 @@ from typingplus import (  # noqa: F401 pylint: disable=unused-import
     Union,
 )
 
+import six
+
 from .meta import Uninstantiable
+from .typing import eval_type
 
 
 _T = TypeVar("_T")
@@ -252,7 +253,7 @@ class _BoundedMeta(Uninstantiable):
             raise TypeError(
                 "{}[...] takes two or three arguments.".format(cls.__name__)
             )
-        elif len(args) == 2:
+        if len(args) == 2:
             type_, bound = args
             keyfunc = cls._identity
         elif len(args) == 3:
